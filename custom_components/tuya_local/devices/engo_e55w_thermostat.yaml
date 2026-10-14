@@ -1,0 +1,345 @@
+name: Thermostat
+products:
+  - id: 7frvwc6y3rh903az
+    manufacturer: Engo
+    model: E55-W
+entities:
+  - entity: climate
+    translation_key: thermostat
+    dps:
+      - id: 1
+        name: hvac_mode
+        type: boolean
+        mapping:
+          - dps_val: false
+            value: "off"
+          - dps_val: true
+            constraint: mode
+            conditions:
+              - dps_val: hot
+                value: heat
+              - dps_val: cold
+                value: cool
+      - id: 2
+        name: mode
+        type: string
+        hidden: true
+      - id: 3
+        name: hvac_action
+        type: string
+        mapping:
+          - dps_val: heating
+            value: heating
+          - dps_val: heating_floor_low_temp
+            value: heating
+          - dps_val: heating_frost_protection
+            value: heating
+          - dps_val: heating_valve_protection
+            value: heating
+          - dps_val: warm_floor_active
+            value: heating
+          - dps_val: cooling
+            value: cooling
+          - dps_val: cooling_floor_over_temp
+            value: cooling
+          - dps_val: switch_off
+            value: "off"
+          - value: idle
+      - id: 16
+        name: temperature
+        type: integer
+        unit: C
+        range:
+          min: 50
+          max: 450
+        mapping:
+          - scale: 10
+            step: 5
+      - id: 19
+        name: max_temperature
+        type: integer
+        mapping:
+          - scale: 10
+      - id: 26
+        name: min_temperature
+        type: integer
+        mapping:
+          - scale: 10
+      - id: 24
+        name: current_temperature
+        type: integer
+        mapping:
+          - scale: 10
+      - id: 58
+        name: preset_mode
+        type: string
+        mapping:
+          - dps_val: manual
+            value: manual
+          - dps_val: program
+            value: program
+          - dps_val: temporary
+            value: temp_override
+          - dps_val: holiday
+            value: away
+          - dps_val: frost
+            value: frost
+  - entity: binary_sensor
+    name: Heating
+    class: heat
+    dps:
+      - id: 3
+        name: sensor
+        type: string
+        mapping:
+          - dps_val: heating
+            value: true
+          - dps_val: heating_floor_low_temp
+            value: true
+          - dps_val: heating_frost_protection
+            value: true
+          - dps_val: heating_valve_protection
+            value: true
+          - dps_val: warm_floor_active
+            value: true
+          - value: false
+      - id: 3
+        name: work_state
+        type: string
+  - entity: number
+    translation_key: temperature_calibration
+    class: temperature_delta
+    category: config
+    dps:
+      - id: 27
+        name: value
+        type: integer
+        unit: C
+        range:
+          min: -35
+          max: 35
+        mapping:
+          - scale: 10
+            step: 5
+  - entity: number
+    translation_key: maximum_temperature
+    class: temperature
+    category: config
+    dps:
+      - id: 19
+        name: value
+        type: integer
+        unit: C
+        range:
+          min: 200
+          max: 450
+        mapping:
+          - scale: 10
+            step: 5
+  - entity: number
+    translation_key: minimum_temperature
+    class: temperature
+    category: config
+    dps:
+      - id: 26
+        name: value
+        type: integer
+        unit: C
+        range:
+          min: 50
+          max: 200
+        mapping:
+          - scale: 10
+            step: 5
+  - entity: number
+    name: Maximum floor temperature
+    class: temperature
+    category: config
+    dps:
+      - id: 110
+        name: value
+        type: integer
+        unit: C
+        range:
+          min: 50
+          max: 450
+        mapping:
+          - scale: 10
+            step: 5
+  - entity: number
+    name: Minimum floor temperature
+    class: temperature
+    category: config
+    dps:
+      - id: 111
+        name: value
+        type: integer
+        unit: C
+        range:
+          min: 50
+          max: 450
+        mapping:
+          - scale: 10
+            step: 5
+  - entity: number
+    name: Frost protection temperature
+    class: temperature
+    category: config
+    dps:
+      - id: 112
+        name: value
+        type: integer
+        unit: C
+        range:
+          min: 50
+          max: 170
+        mapping:
+          - scale: 10
+            step: 5
+  - entity: lock
+    translation_key: child_lock
+    category: config
+    dps:
+      - id: 40
+        name: lock
+        type: boolean
+  - entity: select
+    name: Temperature sensor
+    category: config
+    dps:
+      - id: 43
+        name: option
+        type: string
+        mapping:
+          - dps_val: in_only
+            value: Internal
+          - dps_val: in_out
+            value: Internal and floor
+          - dps_val: out_only
+            value: External
+  - entity: select
+    name: Valve protection
+    category: config
+    dps:
+      - id: 105
+        name: option
+        type: string
+        mapping:
+          - dps_val: "ON"
+            value: "On"
+          - dps_val: AS
+            value: AS
+            hidden: true
+          - dps_val: "OFF"
+            value: "Off"
+  - entity: select
+    translation_key: initial_state
+    category: config
+    dps:
+      - id: 103
+        name: option
+        type: string
+        optional: true
+        mapping:
+          - dps_val: keep_state
+            value: memory
+          - dps_val: switch_on
+            value: "on"
+          - dps_val: switch_off
+            value: "off"
+  - entity: number
+    name: Backlight
+    category: config
+    dps:
+      - id: 44
+        name: value
+        type: integer
+        unit: "%"
+        range:
+          min: 0
+          max: 100
+        mapping:
+          - step: 20
+  - entity: number
+    name: Ambient backlight
+    category: config
+    dps:
+      - id: 104
+        name: value
+        type: integer
+        range:
+          min: 0
+          max: 10
+  - entity: select
+    name: Relay type
+    category: config
+    hidden: true
+    dps:
+      - id: 106
+        name: option
+        type: string
+        mapping:
+          - dps_val: "no"
+            value: Normally open
+          - dps_val: nc
+            value: Normally closed
+  - entity: select
+    name: Control algorithm
+    category: config
+    hidden: true
+    dps:
+      - id: 108
+        name: option
+        type: string
+        mapping:
+          - dps_val: ufh
+            value: TPI underfloor
+          - dps_val: rad
+            value: TPI radiator
+          - dps_val: ele
+            value: TPI electric
+          - dps_val: h2
+            value: Hysteresis h2
+          - dps_val: h4
+            value: Hysteresis h4
+          - dps_val: h6
+            value: Hysteresis h6
+          - dps_val: h8
+            value: Hysteresis h8
+          - dps_val: h10
+            value: Hysteresis h10
+          - dps_val: h20
+            value: Hysteresis h20
+          - dps_val: h30
+            value: Hysteresis h30
+          - dps_val: h40
+            value: Hysteresis h40
+  - entity: binary_sensor
+    name: Floor sensor
+    category: diagnostic
+    dps:
+      - id: 109
+        name: sensor
+        type: boolean
+  - entity: binary_sensor
+    class: problem
+    category: diagnostic
+    dps:
+      - id: 45
+        name: sensor
+        type: bitfield
+        mapping:
+          - dps_val: 0
+            value: false
+          - value: true
+      - id: 45
+        name: fault_code
+        type: bitfield
+  - entity: sensor
+    name: MCU firmware
+    category: diagnostic
+    dps:
+      - id: 101
+        name: sensor
+        type: integer
+        optional: true
